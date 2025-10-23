@@ -107,7 +107,7 @@ if imageUrl.isEmpty {
         if let url = URL(string: whatsAppURL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!) {
             if UIApplication.shared.canOpenURL(url) {
                 UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                result("Success")
+                result("success")
             } else {
                 result(FlutterError(code: "WhatsApp not installed", message: "WhatsApp is not installed on the device.", details: nil))
             }
@@ -134,7 +134,7 @@ if imageUrl.isEmpty {
                     if let viewController = UIApplication.shared.delegate?.window??.rootViewController {
                         viewController.present(activityVC, animated: true) {
                             // Check if WhatsApp was selected after the user finishes the share sheet
-                            result("Success")
+                            result("success")
                         }
                     }
                 } else {
@@ -159,7 +159,7 @@ if imageUrl.isEmpty {
         let whatsAppURL  = NSURL(string: whatsURL.addingPercentEncoding(withAllowedCharacters: characterSet)!)
         if UIApplication.shared.canOpenURL(whatsAppURL! as URL)
         {
-            result("Sucess");
+            result("success");
             UIApplication.shared.open(whatsAppURL! as URL, options: [:], completionHandler: nil)
         } else{
             result(FlutterError(code: "Not found", message: "WhatsApp is not found", details: "WhatsApp not intalled or Check url scheme."));
@@ -174,7 +174,7 @@ if imageUrl.isEmpty {
         let whatsAppURL  = NSURL(string: whatsApp.addingPercentEncoding(withAllowedCharacters: characterSet)!)
         if UIApplication.shared.canOpenURL(whatsAppURL! as URL)
         {
-            result("Sucess");
+            result("success");
             UIApplication.shared.open(whatsAppURL! as URL, options: [:], completionHandler: nil)
         } else {
             result(FlutterError(code: "Not found", message: "WhatsAppBusiness is not found", details: "WhatsAppBusiness not intalled or Check url scheme."));
@@ -207,6 +207,7 @@ if imageUrl.isEmpty {
                 if UIApplication.shared.canOpenURL(URL(string: "fb://")!) {
                     // Facebook is installed, show the share dialog
                     ShareDialog.show(viewController: viewController, content: photoContent, delegate: self)
+                    result("success")
                 } else {
                     // Facebook is not installed, show a fallback (e.g., web share)
                     print("Facebook app is not installed. Proceed with a fallback.")
@@ -229,6 +230,7 @@ if imageUrl.isEmpty {
                 if UIApplication.shared.canOpenURL(URL(string: "fb://")!) {
                     // Facebook is installed, show the share dialog
                     ShareDialog.show(viewController: viewController, content: linkContent, delegate: self)
+                    result("success")
                 } else {
                     // Facebook is not installed, show a fallback (e.g., web share)
                     print("Facebook app is not installed. Proceed with a fallback.")
@@ -341,7 +343,7 @@ func shareTwitter(message: String, url: String?, result: @escaping FlutterResult
             // Open Twitter with the constructed URL
             UIApplication.shared.open(url, options: [:]) { success in
                 if success {
-                    result("Success")
+                    result("success")
                 } else {
                     result(FlutterError(code: "FailedToOpen", message: "Failed to open Twitter", details: nil))
                 }
@@ -363,7 +365,7 @@ func shareTwitter(message: String, url: String?, result: @escaping FlutterResult
         let telegramURL  = NSURL(string: telegram.addingPercentEncoding(withAllowedCharacters: characterSet)!)
         if UIApplication.shared.canOpenURL(telegramURL! as URL)
         {
-            result("Sucess");
+            result("success");
             UIApplication.shared.open(telegramURL! as URL, options: [:], completionHandler: nil)
         } else
         {
@@ -384,7 +386,7 @@ func shareTwitter(message: String, url: String?, result: @escaping FlutterResult
              // Present the message view controller
              if let rootVC = UIApplication.shared.delegate?.window??.rootViewController {
                  rootVC.present(messageVC, animated: true, completion: nil)
-                 result("Sucess");
+                 result("success");
              } else {
                  result(FlutterError(code: "Presentation Error", message: "Root view controller not found", details: nil))
              }
@@ -436,7 +438,7 @@ func shareTwitter(message: String, url: String?, result: @escaping FlutterResult
              // Presenting the mail compose view controller
              if let rootVC = UIApplication.shared.delegate?.window??.rootViewController {
                  rootVC.present(mailComposeVC, animated: true, completion: nil)
-                 result("Success")
+                 result("success")
              } else {
                  result(FlutterError(code: "Presentation Error", message: "Root view controller not found", details: nil))
              }
@@ -483,7 +485,7 @@ public func mailComposeController(_ controller: MFMailComposeViewController, did
             }
         }
         viewController!.present(activityVC, animated: true, completion: nil)
-        result("Sucess");
+        result("success");
         
         
     }
@@ -523,7 +525,7 @@ public func mailComposeController(_ controller: MFMailComposeViewController, did
                                 UIApplication.shared.openURL(urlForRedirect as URL)
                             }
                         }
-                        self.result?("Success")
+                        self.result?("success")
                     }
                 } else{
                     self.result?("Instagram app is not installed on your device")
@@ -538,15 +540,17 @@ public func mailComposeController(_ controller: MFMailComposeViewController, did
     //Facebook delegate methods
     public func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
         print("Share: Success")
-        
+        self.result?("success")
     }
     
     public func sharer(_ sharer: Sharing, didFailWithError error: Error) {
         print("Share: Fail")
+        self.result?("fail")
         
     }
     
     public func sharerDidCancel(_ sharer: Sharing) {
         print("Share: Cancel")
+        self.result?("cancel")
     }
 }
